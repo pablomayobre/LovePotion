@@ -334,7 +334,7 @@ int Wrap_Graphics::Clear(lua_State * L)
 
     instance()->CURRENT_DEPTH = 0.0f;
 
-    instance()->AdjustColor(&clearColor);
+    clearColor.Adjust();
     WINDOW_MODULE()->Clear(&clearColor);
 
     return 0;

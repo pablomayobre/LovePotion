@@ -4,20 +4,21 @@
 using namespace love;
 
 #define FONT_NOT_FOUND_STRING "Could not find font %s (not converted to bcfnt?)"
+#define FONT_MAX_LEN 128
 
-Font::Font(Font::SystemFontType type, float size) : buffer(C2D_TextBufNew(4096)),
+Font::Font(Font::SystemFontType type, float size) : buffer(C2D_TextBufNew(FONT_MAX_LEN)),
                                                     size(size)
 {
     this->font = C2D_FontLoadSystem((CFG_Region)type);
 }
 
-Font::Font(Data * data, float size) : buffer(C2D_TextBufNew(4096)),
+Font::Font(Data * data, float size) : buffer(C2D_TextBufNew(FONT_MAX_LEN)),
                                       size(size)
 {
     this->font = C2D_FontLoadFromMem(data->GetData(), data->GetSize());
 }
 
-Font::Font(float size) : buffer(C2D_TextBufNew(4096)),
+Font::Font(float size) : buffer(C2D_TextBufNew(FONT_MAX_LEN)),
                          size(size)
 {
     this->font = C2D_FontLoadSystem((CFG_Region)SystemFontType::TYPE_STANDARD);
@@ -27,6 +28,11 @@ Font::~Font()
 {
     C2D_TextBufDelete(this->buffer);
     C2D_FontFree(this->font);
+}
+
+void Font::PrintVertices(const std::string & line, const Vector2 & offset, const DrawArgs & args, const Color & color)
+{
+
 }
 
 std::pair<float, float> Font::GenerateVertices(const std::string & line, const std::pair<float, float> & offset,

@@ -46,7 +46,24 @@ namespace love
             struct DisplayState
             {
                 Color foreground = { 1, 1, 1, 1 };
+
+                Color Foreground()
+                {
+                    Color res(this->foreground);
+                    res.Adjust();
+
+                    return res;
+                }
+
                 Color background = { 0, 0, 0, 1 };
+
+                Color Background()
+                {
+                    Color res(this->background);
+                    res.Adjust();
+
+                    return res;
+                }
 
                 float lineWidth = 1.0f;
                 float pointSize = 1.0f;
@@ -185,10 +202,6 @@ namespace love
             void Reset();
 
             void Present();
-
-            Color AdjustColor(const Color & in);
-
-            void AdjustColor(Color * in);
 
             std::vector<DisplayState> states;
 

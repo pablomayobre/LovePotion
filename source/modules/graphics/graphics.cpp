@@ -185,12 +185,12 @@ Quad * Graphics::NewQuad(Quad::Viewport viewport, double sw, double sh)
 
 void Graphics::Draw(Drawable * drawable, const DrawArgs & args)
 {
-    drawable->Draw(args, this->AdjustColor(this->states.back().foreground));
+    drawable->Draw(args, this->states.back().Foreground());
 }
 
 void Graphics::Draw(Texture * texture, Quad * quad, const DrawArgs & args)
 {
-    texture->Draw(args, quad, this->AdjustColor(this->states.back().foreground));
+    texture->Draw(args, quad, this->states.back().Foreground());
 }
 
 void Graphics::Print(const std::vector<Font::ColoredString> & strings, const DrawArgs & args)
@@ -203,7 +203,7 @@ void Graphics::Print(const std::vector<Font::ColoredString> & strings, const Dra
 
 void Graphics::Print(const std::vector<Font::ColoredString> & strings, Font * font, const DrawArgs & args)
 {
-    font->Print(strings, args, nullptr, this->AdjustColor(this->states.back().foreground), Font::ALIGN_LEFT);
+    font->Print(strings, args, nullptr, this->states.back().Foreground(), Font::ALIGN_LEFT);
 }
 
 void Graphics::PrintF(const std::vector<Font::ColoredString> & strings, const DrawArgs & args, float wrap, Font::AlignMode align)
@@ -216,46 +216,46 @@ void Graphics::PrintF(const std::vector<Font::ColoredString> & strings, const Dr
 
 void Graphics::PrintF(const std::vector<Font::ColoredString> & strings, Font * font, const DrawArgs & args, float wrap, Font::AlignMode align)
 {
-    font->Print(strings, args, &wrap, this->AdjustColor(this->states.back().foreground), align);
+    font->Print(strings, args, &wrap, this->states.back().Foreground(), align);
 }
 
 /* End Objects */
 
 void Graphics::Rectangle(const std::string & mode, float x, float y, float width, float height, float rx, float ry)
 {
-    Primitives::Rectangle(mode, x, y, width, height, rx, ry, this->GetLineWidth(), this->AdjustColor(this->states.back().foreground));
+    Primitives::Rectangle(mode, x, y, width, height, rx, ry, this->GetLineWidth(), this->states.back().Foreground());
 }
 
 void Graphics::Polygon(const std::string & mode, std::vector<Graphics::Point> points)
 {
-    Primitives::Polygon(mode, points, this->GetLineWidth(), this->AdjustColor(this->states.back().foreground));
+    Primitives::Polygon(mode, points, this->GetLineWidth(), this->states.back().Foreground());
 }
 
 void Graphics::Arc(const std::string & mode, float x, float y, float radius, float startAngle, float endAngle)
 {
-    Primitives::Arc(mode, x, y, radius, startAngle, endAngle, this->AdjustColor(this->states.back().foreground));
+    Primitives::Arc(mode, x, y, radius, startAngle, endAngle, this->states.back().Foreground());
 }
 
 void Graphics::Ellipse(const std::string & mode, float x, float y, float radiusX, float radiusY)
 {
-    Primitives::Ellipse(mode, x, y, radiusX, radiusY, this->AdjustColor(this->states.back().foreground));
+    Primitives::Ellipse(mode, x, y, radiusX, radiusY, this->states.back().Foreground());
 }
 
 void Graphics::Line(float startx, float starty, float endx, float endy)
 {
-    Primitives::Line(startx, starty, endx, endy, this->GetLineWidth(), this->AdjustColor(this->states.back().foreground));
+    Primitives::Line(startx, starty, endx, endy, this->GetLineWidth(), this->states.back().Foreground());
 }
 
 void Graphics::Circle(float x, float y, float radius)
 {
-    Primitives::Circle("fill", x, y, radius, this->GetLineWidth(), this->AdjustColor(this->states.back().foreground));
+    Primitives::Circle("fill", x, y, radius, this->GetLineWidth(), this->states.back().Foreground());
 }
 
 void Graphics::Reset()
 {
     DisplayState blankState;
     this->RestoreState(blankState);
-    // Origin
+    this->Origin();
 }
 
 /* Private */
@@ -382,35 +382,4 @@ void Graphics::Transform(DrawArgs * args)
 
     args->scalarX *= transform.scalarX;
     args->scalarY *= transform.scalarY;
-}
-
-void Graphics::AdjustColor(Color * in)
-{
-    float mul = 255.0f;
-
-    #if defined(_3DS)
-        mul = 1.0f;
-    #endif
-
-    in->r = std::clamp(in->r, 0.0f, 1.0f) * mul;
-    in->g = std::clamp(in->g, 0.0f, 1.0f) * mul;
-    in->b = std::clamp(in->b, 0.0f, 1.0f) * mul;
-    in->a = std::clamp(in->a, 0.0f, 1.0f) * mul;
-}
-
-Color Graphics::AdjustColor(const Color & in)
-{
-    float mul = 255.0f;
-    Color ret = {0, 0, 0, 0};
-
-    #if defined(_3DS)
-        mul = 1.0f;
-    #endif
-
-    ret.r = std::clamp(in.r, 0.0f, 1.0f) * mul;
-    ret.g = std::clamp(in.g, 0.0f, 1.0f) * mul;
-    ret.b = std::clamp(in.b, 0.0f, 1.0f) * mul;
-    ret.a = std::clamp(in.a, 0.0f, 1.0f) * mul;
-
-    return ret;
 }
